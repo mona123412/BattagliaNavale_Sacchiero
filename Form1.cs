@@ -73,6 +73,7 @@ Modifiche:
         public List<int[]> naviRimaste = new List<int[]>(); // navi rimaste da posizionare: 1 nave da 4 celle, 2 navi da 3 celle, 2 navi da 2 celle, 1 nave da 1 cella
 
         List<List<Cnave>> navi = new List<List<Cnave>>();
+
         public Form1()
         {
             InitializeComponent();
@@ -120,9 +121,8 @@ Modifiche:
             if (campo[campoAttivo][xIn, yIn] == 1)
             {
                 EffettuaMossa(xIn, yIn, dtg_battaglia, lst_Log, lbl_tentativi, lbl_naviAffondate, lbl_naviRimanenti);
-                return true; // trovato
             }
-            return false; // non trovato
+            return true;
         }
 
 
@@ -182,24 +182,30 @@ Modifiche:
             navi.Add(new List<Cnave>()); // aggiunge la lista delle navi del primo giocatore
         }
 
-        private void dtg_battaglia_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        public void PreparaComboBox()
         {
-            int riga = e.RowIndex;
-            int colonna = e.ColumnIndex;
+
+            // aggiunge gli elementi alla cmb_lunghezza (4 celle, 3 celle, 2 celle, 1 cella)
+            cmb_lunghezza.Items.Add("1 cella");
+            cmb_lunghezza.Items.Add("2 celle");
+            cmb_lunghezza.Items.Add("3 celle");
+            cmb_lunghezza.Items.Add("4 celle");
 
 
-            if (faseDiGioco == 0)
-            {
-                PosizionaNave(colonna, riga);
-            }
-            else if (faseDiGioco == 1 && campoAttivo == 0)
-            {
-                EffettuaMossa(colonna, riga, dtg_battaglia, lst_Log, lbl_tentativi, lbl_naviAffondate, lbl_naviRimanenti);
-                if (modalita == 1) // se è 1v1 - 2 campi
-                {
-                    campoAttivo = 1; // passa al secondo campo
-                }
-            }
+            cmb_lunghezza.SelectedIndex = 0; // seleziona il primo elemento di default
+
+            // aggiunge gli elementi alla cmb_direzione (su, giu, destra, sinistra)
+
+            cmb_direzione.Items.Add("su");
+            cmb_direzione.Items.Add("giu");
+            cmb_direzione.Items.Add("destra");
+            cmb_direzione.Items.Add("sinistra");
+
+            cmb_direzione.SelectedIndex = 0; // seleziona il primo elemento di default
+
+            // non permette di scrivere nella combobox
+            cmb_lunghezza.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmb_direzione.DropDownStyle = ComboBoxStyle.DropDownList;
         }
 
         public void Crea1CampoDiGioco(DataGridView dtg_battagliaIn)
@@ -248,31 +254,27 @@ Modifiche:
             dtg_battagliaIn.SelectionMode = DataGridViewSelectionMode.CellSelect;
         }
 
-        public void PreparaComboBox()
+
+        private void dtg_battaglia_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
+            int riga = e.RowIndex;
+            int colonna = e.ColumnIndex;
 
-            // aggiunge gli elementi alla cmb_lunghezza (4 celle, 3 celle, 2 celle, 1 cella)
-            cmb_lunghezza.Items.Add("1 cella");
-            cmb_lunghezza.Items.Add("2 celle");
-            cmb_lunghezza.Items.Add("3 celle");
-            cmb_lunghezza.Items.Add("4 celle");
-           
 
-            cmb_lunghezza.SelectedIndex = 0; // seleziona il primo elemento di default
-
-            // aggiunge gli elementi alla cmb_direzione (su, giu, destra, sinistra)
-
-            cmb_direzione.Items.Add("su");
-            cmb_direzione.Items.Add("giu");
-            cmb_direzione.Items.Add("destra");
-            cmb_direzione.Items.Add("sinistra");
-
-            cmb_direzione.SelectedIndex = 0; // seleziona il primo elemento di default
-
-            // non permette di scrivere nella combobox
-            cmb_lunghezza.DropDownStyle = ComboBoxStyle.DropDownList;
-            cmb_direzione.DropDownStyle = ComboBoxStyle.DropDownList;
+            if (faseDiGioco == 0)
+            {
+                PosizionaNave(colonna, riga);
+            }
+            else if (faseDiGioco == 1 && campoAttivo == 0)
+            {
+                EffettuaMossa(colonna, riga, dtg_battaglia, lst_Log, lbl_tentativi, lbl_naviAffondate, lbl_naviRimanenti);
+                if (modalita == 1) // se è 1v1 - 2 campi
+                {
+                    campoAttivo = 1; // passa al secondo campo
+                }
+            }
         }
+
 
         public void PosizionaNave(int x, int y)
         {
@@ -430,21 +432,22 @@ Modifiche:
 
         public bool PerOgniCellaAttorno(int x, int y, OperzaioneSuCelle operazione)
         {
+            // definisce gli offset per le 8 celle attorno a (x, y)
             int[,] offset =
             {
-        {-1,-1}, {-1,0}, {-1,1},
-        { 0,-1},         { 0,1},
-        { 1,-1}, { 1,0}, { 1,1}
-    };
+                {-1,-1}, {-1,0}, {-1,1},
+                { 0,-1},         { 0,1},
+                { 1,-1}, { 1,0}, { 1,1}
+            };
 
             for (int i = 0; i < 8; i++)
             {
-                int nx = x + offset[i, 0];
+                int nx = x + offset[i, 0]; // prende le coordinate della cella attorno
                 int ny = y + offset[i, 1];
 
-                if (nx >= 0 && nx < 10 && ny >= 0 && ny < 10)
+                if (nx >= 0 && nx < 10 && ny >= 0 && ny < 10) // controlo fuori campo
                 {
-                    if (!operazione(nx, ny)) // se l'operazione ritorna false
+                    if (!operazione(nx, ny) && faseDiGioco == 0) // se l'operazione ritorna false e siamo in fase di posizionamento
                     {
                         return false; // smetti e ritorna false
                     }
@@ -530,6 +533,7 @@ Modifiche:
         }
     }
 
+    // classe per gli argomenti dell'evento colpito
     public class EventColpitoArg : EventArgs
     {
         public int x { get; private set; }
