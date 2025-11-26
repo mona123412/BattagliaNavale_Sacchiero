@@ -15,8 +15,6 @@ namespace BattagliaNavale_Sacchiero
 
         public int SceltaFatta { get; protected set; }
 
-        public DialogResult Result { get; internal set; }
-
         public Fscelta()
         {
             InitializeComponent();
@@ -44,7 +42,8 @@ namespace BattagliaNavale_Sacchiero
         private void btn_scelta_Click(object sender, EventArgs e)
         {
             SceltaFatta = cmb_scelta.SelectedIndex; // salva la scelta fatta
-            this.Result = DialogResult.OK; // imposta il risultato della finestra di scelta come OK
+
+            this.DialogResult = DialogResult.OK; // imposta il risultato della finestra di scelta come OK
 
             this.Close(); // chiude la finestra di scelta
         }
@@ -52,9 +51,9 @@ namespace BattagliaNavale_Sacchiero
         // se l'utente chiude la finestra senza fare una scelta
         private void Fscelta_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (this.Result != DialogResult.OK) // se non è stato impostato come OK
+            if (this.DialogResult != DialogResult.OK) // se non è stato impostato come OK
             {
-                this.Result = DialogResult.Cancel; // imposta il risultato come Cancel
+                this.DialogResult = DialogResult.Cancel; // imposta il risultato come Cancel
             }
         }
     }

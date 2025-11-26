@@ -46,8 +46,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CgiocoBase.cs" />
-    <Compile Include="Cmanager.cs" />
     <Compile Include="Cnave.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>

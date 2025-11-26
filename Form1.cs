@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -49,6 +51,12 @@ Modifiche:
 
         Random rand = new Random(Environment.TickCount);
 
+        // prendo i suoni
+        SoundPlayer Sinizio = new SoundPlayer(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"media\inizio.wav"));
+        SoundPlayer Scolpito = new SoundPlayer(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"media\colpito.wav"));
+        SoundPlayer Smancato = new SoundPlayer(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"media\mancato.wav"));
+        SoundPlayer Svittoria = new SoundPlayer(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"media\vittoria.wav"));
+
         public delegate bool OperzaioneSuCelle(int xIn, int yIn);
 
         public List<int> mosseEffettuate = new List<int>(); // di base è 0, nella fase di gioco va incrementato ad ogni mossa effettuata
@@ -77,7 +85,6 @@ Modifiche:
 
         public void Inizio()
         {
-            PrendeScelta();
 
             Crea1CampoDiGioco(dtg_battaglia);
 
@@ -95,7 +102,7 @@ Modifiche:
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            PrendeScelta();
         }
 
         public bool Libero(int xIn, int yIn)
@@ -294,7 +301,7 @@ Modifiche:
             {
                 if (!(PerOgniCellaAttorno(x + (dx * i), y + (dy * i), Libero) && ContolloCellaDisponibile(x + (dx * i), y + (dy * i))))
                 {
-                    MessageBox.Show("Cella non disponibile per posizionamento nave!");
+                    MessageBox.Show("NON puoi posizionare qui");
                     return; // esce dalla funzione se una delle celle non è disponibile
                 }
             }
@@ -346,6 +353,8 @@ Modifiche:
 
                         MosseComputer();
                     }
+
+                    Sinizio.Play(); // avvia suono inizio gioco
                 }
             }
 
@@ -396,6 +405,8 @@ Modifiche:
                 }
                 // non permette più di fare mosse
                 faseDiGioco = -1;
+
+                Svittoria.Play(); // avvia suono vittoria
 
             }
         }
@@ -454,6 +465,8 @@ Modifiche:
 
                 campo[campoAttivo][x, y] = -1; // segna la cella come colpita
 
+                Scolpito.Play(); // avvia suono colpito
+
                 // scrive nel log "Colpito in posizione (x,y)"
                 log.Items.Add($"Colpito in posizione ({(char)(x + 65)},{y + 1})");
 
@@ -473,6 +486,8 @@ Modifiche:
                 dtg_battagliaIn.Rows[y].Cells[x].Style.SelectionBackColor = Color.Blue;
 
                 campo[campoAttivo][x, y] = -1; // segna la cella come colpita
+
+                Smancato.Play(); // avvia suono mancato
 
                 mosseEffettuate[campoAttivo]++;
 
