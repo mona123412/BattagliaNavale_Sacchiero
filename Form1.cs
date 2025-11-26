@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static BattagliaNavale_Sacchiero.Form1;
 
 namespace BattagliaNavale_Sacchiero
 {
@@ -45,6 +46,10 @@ Modifiche:
     public partial class Form1 : Form
     {
         public static event EventHandler<EventColpitoArg> colpito_EventHandler;
+
+        Random rand = new Random(Environment.TickCount);
+
+        public delegate bool OperzaioneSuCelle(int xIn, int yIn);
 
         public List<int> mosseEffettuate = new List<int>(); // di base è 0, nella fase di gioco va incrementato ad ogni mossa effettuata
         public List<int> naviNonAffondate = new List<int>(); // di base è 0, nella fase di posizionamento va incrementato ad ogni nave posizionata e nella fase di gioco va decrementato ad ogni nave affondata
@@ -91,6 +96,26 @@ Modifiche:
         private void Form1_Load(object sender, EventArgs e)
         {
 
+        }
+
+        public bool Libero(int xIn, int yIn)
+        {
+            if (campo[campoAttivo][xIn, yIn] != 0)
+            {
+                return false; // occupato
+            }
+            return true; // libero
+        }
+
+        public bool Colpisci(int xIn, int yIn)
+        {
+
+            if (campo[campoAttivo][xIn, yIn] == 1)
+            {
+                EffettuaMossa(xIn, yIn, dtg_battaglia, lst_Log, lbl_tentativi, lbl_naviAffondate, lbl_naviRimanenti);
+                return true; // trovato
+            }
+            return false; // non trovato
         }
 
 
@@ -260,7 +285,7 @@ Modifiche:
 
             for (int i = 0; i < lunghezzaNave; i++)
             {
-                if (!ControllaCelleAttorno(x + (dx * i), y + (dy * i)))
+                if (!(PerOgniCellaAttorno(x + (dx * i), y + (dy * i), Libero) && ContolloCellaDisponibile(x + (dx * i), y + (dy * i))))
                 {
                     MessageBox.Show("Cella non disponibile per posizionamento nave!");
                     return; // esce dalla funzione se una delle celle non è disponibile
@@ -295,11 +320,11 @@ Modifiche:
                 } else {
                     faseDiGioco = 1;
 
-                    if (modalita == 1)
+                    if (modalita == 1) // se è 1v1 - 2 campi
                     {
-                        this.Size = new Size(800, 910);
+                        this.Size = new Size(800, 910); // ridimensiona il form per far vedere il secondo campo
 
-                        Crea1CampoDiGioco(dtg_campo2);
+                        Crea1CampoDiGioco(dtg_campo2); // crea il secondo campo di gioco
                     }
 
                     pnl_primaFase.Visible = false;
@@ -307,9 +332,12 @@ Modifiche:
 
                     Cnave.affondato_EventHandler += Nave_affondata_EventHandler;
 
-                    if(modalita == 2)
+                    if(modalita == 2) // se è vs computer
                     {
+                        // non permette più di fare mosse
+                        faseDiGioco = -1;
 
+                        MosseComputer();
                     }
                 }
             }
@@ -382,29 +410,30 @@ Modifiche:
             return true;
         }
 
-        public bool ControllaCelleAttorno(int x, int y)
+        public bool PerOgniCellaAttorno(int x, int y, OperzaioneSuCelle operazione)
         {
-            // array delle coordinate attorno alla cella (8 direzioni)
-            int[,] offset = {
-                {-1, -1}, {-1, 0}, {-1, 1},
-                { 0, -1},          { 0, 1},
-                { 1, -1}, { 1, 0}, { 1, 1}
-            };
+            int[,] offset =
+            {
+        {-1,-1}, {-1,0}, {-1,1},
+        { 0,-1},         { 0,1},
+        { 1,-1}, { 1,0}, { 1,1}
+    };
 
             for (int i = 0; i < 8; i++)
             {
                 int nx = x + offset[i, 0];
                 int ny = y + offset[i, 1];
 
-                // se dentro il campo, controlla se è occupata
                 if (nx >= 0 && nx < 10 && ny >= 0 && ny < 10)
                 {
-                    if (campo[campoAttivo][nx, ny] != 0)
-                        return false; // c'è una nave attorno
+                    if (!operazione(nx, ny)) // se l'operazione ritorna false
+                    {
+                        return false; // smetti e ritorna false
+                    }
                 }
             }
 
-            return ContolloCellaDisponibile(x, y); // nessuna nave attorno
+            return true;
         }
 
         public void EffettuaMossa(int x, int y, DataGridView dtg_battagliaIn, ListBox log, Label tentativi, Label naviAff, Label naviRim)
@@ -425,6 +454,11 @@ Modifiche:
                 colpito_EventHandler.Invoke(this, new EventColpitoArg(x, y, campoAttivo));
 
                 mosseEffettuate[campoAttivo]++;
+
+                if (modalita == 2) // se è vs computer
+                {
+                    PerOgniCellaAttorno(x, y, Colpisci);
+                }
             }
             else if(campo[campoAttivo][x, y] == 0)
             {
@@ -442,6 +476,23 @@ Modifiche:
             tentativi.Text = $"{mosseEffettuate[campoAttivo]}";
             naviAff.Text = $"{6 - naviNonAffondate[campoAttivo]}";
             naviRim.Text = $"{naviNonAffondate[campoAttivo]}";
+        }
+
+        public async void MosseComputer() // funzione asincrona per permettere i ritardi tra una mossa e l'altra
+        {
+
+            while (naviNonAffondate[campoAttivo] > 0) // finché ci sono navi non affondate
+            {
+                int x = rand.Next(0, 10);
+                int y = rand.Next(0, 10);
+                if (campo[0][x, y] == -1)
+                {
+                    continue; // cella già colpita, ripeti il ciclo
+                }
+                EffettuaMossa(x, y, dtg_battaglia, lst_Log, lbl_tentativi, lbl_naviAffondate, lbl_naviRimanenti);
+
+                await Task.Delay(500);
+            }
         }
 
         private void dtg_campo2_CellContentClick(object sender, DataGridViewCellEventArgs e)
