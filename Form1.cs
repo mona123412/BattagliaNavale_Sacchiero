@@ -122,13 +122,20 @@ Modifiche:
         public void PrendeScelta()
         {
             Fscelta finestra = new Fscelta();
-            finestra.scelta_EventHandler += finestra_scelta_EventHandler;
-            finestra.ShowDialog();
+            if(finestra.ShowDialog() == DialogResult.OK)
+            {
+                finestra_scelta(finestra.SceltaFatta);
+            }
+            else
+            {
+                MessageBox.Show("Nessuna modalità selezionata, il programma verrà chiuso.");
+                this.Close();
+            }
         }
 
-        private void finestra_scelta_EventHandler(object sender, EventoScelta e)
+        private void finestra_scelta(int SceltaFatta)
         {
-            modalita = e.SceltaFatta; ;
+            modalita = SceltaFatta; ;
             // gestisce la scelta fatta nella finestra di scelta modalità
             switch (modalita)
             {

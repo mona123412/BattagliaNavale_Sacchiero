@@ -13,7 +13,9 @@ namespace BattagliaNavale_Sacchiero
     public partial class Fscelta : Form
     {
 
-        public event EventHandler<EventoScelta> scelta_EventHandler;
+        public int SceltaFatta { get; protected set; }
+
+        public DialogResult Result { get; internal set; }
 
         public Fscelta()
         {
@@ -41,19 +43,19 @@ namespace BattagliaNavale_Sacchiero
 
         private void btn_scelta_Click(object sender, EventArgs e)
         {
-            EventoScelta scelta = new EventoScelta(cmb_scelta.SelectedIndex);
-            scelta_EventHandler.Invoke(this, scelta); // lancia l'evento con la scelta fatta
+            SceltaFatta = cmb_scelta.SelectedIndex; // salva la scelta fatta
+            this.Result = DialogResult.OK; // imposta il risultato della finestra di scelta come OK
 
             this.Close(); // chiude la finestra di scelta
         }
-    }
 
-    public class EventoScelta : EventArgs
-    {
-        public int SceltaFatta { get; set; }
-        public EventoScelta(int scelta)
+        // se l'utente chiude la finestra senza fare una scelta
+        private void Fscelta_FormClosing(object sender, FormClosingEventArgs e)
         {
-            SceltaFatta = scelta;
+            if (this.Result != DialogResult.OK) // se non è stato impostato come OK
+            {
+                this.Result = DialogResult.Cancel; // imposta il risultato come Cancel
+            }
         }
     }
 }
