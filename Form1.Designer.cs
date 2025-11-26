@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.cmb_lunghezza = new System.Windows.Forms.ComboBox();
             this.cmb_direzione = new System.Windows.Forms.ComboBox();
             this.lbl_titoloTipoNave = new System.Windows.Forms.Label();
@@ -41,8 +42,8 @@
             this.lbl_naviAffondate = new System.Windows.Forms.Label();
             this.lbl_naviAffondateTitolo = new System.Windows.Forms.Label();
             this.pnl_secondaFase = new System.Windows.Forms.Panel();
-            this.pnl_primaFase = new System.Windows.Forms.Panel();
             this.lst_Log = new System.Windows.Forms.ListBox();
+            this.pnl_primaFase = new System.Windows.Forms.Panel();
             this.lbl_messaggioVittoria = new System.Windows.Forms.Label();
             this.pnl_secondaFase2 = new System.Windows.Forms.Panel();
             this.lst_log2 = new System.Windows.Forms.ListBox();
@@ -54,6 +55,7 @@
             this.lbl_naviAffondate2 = new System.Windows.Forms.Label();
             this.dtg_campo2 = new System.Windows.Forms.DataGridView();
             this.lbl_vittoria2 = new System.Windows.Forms.Label();
+            this.lbl_giocatore = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dtg_battaglia)).BeginInit();
             this.pnl_secondaFase.SuspendLayout();
             this.pnl_primaFase.SuspendLayout();
@@ -64,7 +66,7 @@
             // cmb_lunghezza
             // 
             this.cmb_lunghezza.FormattingEnabled = true;
-            this.cmb_lunghezza.Location = new System.Drawing.Point(6, 27);
+            this.cmb_lunghezza.Location = new System.Drawing.Point(7, 68);
             this.cmb_lunghezza.Name = "cmb_lunghezza";
             this.cmb_lunghezza.Size = new System.Drawing.Size(121, 21);
             this.cmb_lunghezza.TabIndex = 1;
@@ -72,7 +74,7 @@
             // cmb_direzione
             // 
             this.cmb_direzione.FormattingEnabled = true;
-            this.cmb_direzione.Location = new System.Drawing.Point(6, 85);
+            this.cmb_direzione.Location = new System.Drawing.Point(7, 126);
             this.cmb_direzione.Name = "cmb_direzione";
             this.cmb_direzione.Size = new System.Drawing.Size(121, 21);
             this.cmb_direzione.TabIndex = 2;
@@ -81,7 +83,7 @@
             // 
             this.lbl_titoloTipoNave.AutoSize = true;
             this.lbl_titoloTipoNave.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_titoloTipoNave.Location = new System.Drawing.Point(2, 0);
+            this.lbl_titoloTipoNave.Location = new System.Drawing.Point(3, 41);
             this.lbl_titoloTipoNave.Name = "lbl_titoloTipoNave";
             this.lbl_titoloTipoNave.Size = new System.Drawing.Size(225, 24);
             this.lbl_titoloTipoNave.TabIndex = 3;
@@ -91,7 +93,7 @@
             // 
             this.lbl_direzione.AutoSize = true;
             this.lbl_direzione.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_direzione.Location = new System.Drawing.Point(2, 58);
+            this.lbl_direzione.Location = new System.Drawing.Point(3, 99);
             this.lbl_direzione.Name = "lbl_direzione";
             this.lbl_direzione.Size = new System.Drawing.Size(189, 24);
             this.lbl_direzione.TabIndex = 4;
@@ -195,17 +197,6 @@
             this.pnl_secondaFase.Size = new System.Drawing.Size(263, 359);
             this.pnl_secondaFase.TabIndex = 16;
             // 
-            // pnl_primaFase
-            // 
-            this.pnl_primaFase.Controls.Add(this.lbl_titoloTipoNave);
-            this.pnl_primaFase.Controls.Add(this.cmb_lunghezza);
-            this.pnl_primaFase.Controls.Add(this.cmb_direzione);
-            this.pnl_primaFase.Controls.Add(this.lbl_direzione);
-            this.pnl_primaFase.Location = new System.Drawing.Point(436, 38);
-            this.pnl_primaFase.Name = "pnl_primaFase";
-            this.pnl_primaFase.Size = new System.Drawing.Size(223, 130);
-            this.pnl_primaFase.TabIndex = 17;
-            // 
             // lst_Log
             // 
             this.lst_Log.FormattingEnabled = true;
@@ -213,6 +204,18 @@
             this.lst_Log.Name = "lst_Log";
             this.lst_Log.Size = new System.Drawing.Size(233, 160);
             this.lst_Log.TabIndex = 18;
+            // 
+            // pnl_primaFase
+            // 
+            this.pnl_primaFase.Controls.Add(this.lbl_giocatore);
+            this.pnl_primaFase.Controls.Add(this.lbl_titoloTipoNave);
+            this.pnl_primaFase.Controls.Add(this.cmb_lunghezza);
+            this.pnl_primaFase.Controls.Add(this.cmb_direzione);
+            this.pnl_primaFase.Controls.Add(this.lbl_direzione);
+            this.pnl_primaFase.Location = new System.Drawing.Point(436, 38);
+            this.pnl_primaFase.Name = "pnl_primaFase";
+            this.pnl_primaFase.Size = new System.Drawing.Size(298, 177);
+            this.pnl_primaFase.TabIndex = 17;
             // 
             // lbl_messaggioVittoria
             // 
@@ -333,6 +336,16 @@
             this.lbl_vittoria2.TabIndex = 21;
             this.lbl_vittoria2.Text = "HAI VINTO !!!";
             // 
+            // lbl_giocatore
+            // 
+            this.lbl_giocatore.AutoSize = true;
+            this.lbl_giocatore.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_giocatore.Location = new System.Drawing.Point(3, 16);
+            this.lbl_giocatore.Name = "lbl_giocatore";
+            this.lbl_giocatore.Size = new System.Drawing.Size(287, 24);
+            this.lbl_giocatore.TabIndex = 5;
+            this.lbl_giocatore.Text = "Giocatore 1: Posiziona le tue navi";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -346,8 +359,9 @@
             this.Controls.Add(this.pnl_secondaFase);
             this.Controls.Add(this.lbl_titolo);
             this.Controls.Add(this.dtg_battaglia);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Battaglia Navale";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dtg_battaglia)).EndInit();
             this.pnl_secondaFase.ResumeLayout(false);
@@ -389,6 +403,7 @@
         private System.Windows.Forms.Label lbl_naviAffondate2;
         private System.Windows.Forms.DataGridView dtg_campo2;
         private System.Windows.Forms.Label lbl_vittoria2;
+        private System.Windows.Forms.Label lbl_giocatore;
     }
 }
 

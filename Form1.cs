@@ -65,6 +65,8 @@ namespace BattagliaNavale_Sacchiero
             lbl_messaggioVittoria.Visible = false;
             lbl_vittoria2.Visible = false;
 
+            lbl_giocatore.Visible = false;
+
             // da dimensioni iniziali al form (800; 490)
             this.Size = new Size(800, 490);
         }
@@ -124,6 +126,8 @@ namespace BattagliaNavale_Sacchiero
                     campoAttivo = 0;
                     aggiunge();
                     aggiunge();
+
+                    lbl_giocatore.Visible = true;
                     break;
                 case 2: // vs Computer
                     campoAttivo = 0;
@@ -301,6 +305,8 @@ namespace BattagliaNavale_Sacchiero
                 if(modalita == 1 && campoAttivo == 0) // se è 1v1 - 2 campi
                 {
                     campoAttivo = 1; // passa al secondo campo
+
+                    lbl_giocatore.Text = "Giocatore 2: Posiziona le tue navi";
                 } else {
                     faseDiGioco = 1;
 

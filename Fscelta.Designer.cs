@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Fscelta));
             this.lbl_scelta = new System.Windows.Forms.Label();
             this.cmb_scelta = new System.Windows.Forms.ComboBox();
             this.btn_scelta = new System.Windows.Forms.Button();
@@ -69,8 +70,9 @@
             this.Controls.Add(this.btn_scelta);
             this.Controls.Add(this.cmb_scelta);
             this.Controls.Add(this.lbl_scelta);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Fscelta";
-            this.Text = "Fscelta";
+            this.Text = "Battaglia Navale";
             this.Load += new System.EventHandler(this.Fscelta_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
